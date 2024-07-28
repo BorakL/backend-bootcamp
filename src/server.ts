@@ -26,15 +26,17 @@
 import express, { NextFunction, Request, Response, Express } from 'express'
 import mongoose, { mongo } from 'mongoose';
 import dotenv from 'dotenv'
+import gameRouter from './routes/gameRouter';
+import genreRouter from './routes/genreRouter';
 
 dotenv.config();
 
 const app:Express = express();
 
-app.use((req:Request, res:Response, next:NextFunction) => {
-    console.log("without route")
-    res.sendStatus(200)
-})  
+app.use(express.json())
+
+app.use("/api/v1/games",gameRouter)
+app.use("/api/v1/genres",genreRouter) 
 
 const connectDB = async()=>{
     try{

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IGame } from "../types/models";
-
+ 
 const gameSchema: Schema<IGame> = new mongoose.Schema({
     name: {
         type: String,
@@ -27,23 +27,19 @@ const gameSchema: Schema<IGame> = new mongoose.Schema({
         type: Number,
         required: [true, 'Price is required']
     },
-    onDiscount: {
-        type: Boolean,
-        default: false
-    },
     discount: {
         type: Number,
-        default: 0,
-        validate: {
-            validator: function(value){
-                if((!this.onDiscount && value!==0) || (this.onDiscount && value===0)){
-                    return false
-                }
-                return true;
-            },
-            message: "Error"
-        }
+        default: 0
     }
+}, 
+{
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true}
+}
+)
+
+gameSchema.virtual("onDiscount").get(function(){
+    return this.discount > 0 
 })
 
 const Game = mongoose.model<IGame>('Game', gameSchema)

@@ -1,12 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { IGenre } from "../types/models";
 
-const genreSchema = new mongoose.Schema({
+const genreSchema:Schema<IGenre> = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "Genre is required"]
     }
 })
 
-const Genre = mongoose.model('Genre', genreSchema)
+const Genre = mongoose.model<IGenre>('Genre', genreSchema)
 
 export default Genre;
