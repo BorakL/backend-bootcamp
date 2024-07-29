@@ -6,6 +6,9 @@ const genreSchema:Schema<IGenre> = new mongoose.Schema({
         type: String,
         required: [true, "Genre is required"]
     }
+},
+{
+    timestamps: true
 })
 
 const Genre = mongoose.model<IGenre>('Genre', genreSchema)

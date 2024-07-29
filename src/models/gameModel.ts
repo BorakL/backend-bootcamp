@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IGame } from "../types/models";
+import { timeStamp } from "console";
  
 const gameSchema: Schema<IGame> = new mongoose.Schema({
     name: {
@@ -33,6 +34,7 @@ const gameSchema: Schema<IGame> = new mongoose.Schema({
     }
 }, 
 {
+    timestamps: true,
     toJSON: {virtuals: true},
     toObject: {virtuals: true}
 }
