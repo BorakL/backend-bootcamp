@@ -1,87 +1,52 @@
-import { NextFunction, Request, Response } from "express"; 
+import { NextFunction, Request, RequestHandler, Response } from "express"; 
 import { Model } from "mongoose";
+import catchAsync from "../utilities/catchAsync";
 
-export const getAll = (model:Model<any>) => {
-    async(req:Request, res:Response, next:NextFunction) => {
-        try{
-            const data = await model.find();
+export const getAll = (model:Model<any>): RequestHandler =>  
+    catchAsync(async(req:Request, res:Response, next:NextFunction) => {
+        const data = await model.find();
+        throw new Error("greška")
             res.status(200).json({
                 status: "success",
                 data
             })
-        }catch(error){
-            res.status(404).json({
-                status: "fail",
-                message: error
-            })
-        }
-    }
-}
+    })
 
-export const getOneById = (model: Model<any>) => {
-    async(req:Request, res:Response, next:NextFunction) => {
-        try{
-            const data = await model.findById(req.params.id);
+export const getOne = (model: Model<any>): RequestHandler => 
+    catchAsync(async(req:Request, res:Response, next:NextFunction) => {
+        const data = await model.findById(req.params.id);
             res.status(200).json({
                 status:"success",
                 data
             })
-        }catch(error){
-            res.status(404).json({
-                status: "fail",
-                message: error
-            })
-        }
-    }
-}
+    })
 
-export const updateOne = (model:Model<any>) => {
+export const updateOne = (model:Model<any>): RequestHandler =>
+    catchAsync(async(req:Request, res:Response, next:NextFunction) => {
+        const doc = await model.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        })
+        res.status(201).json({
+            status:"success",
+            data: doc
+        })
+    })
 
-    async (req:Request, res:Response, next:NextFunction) => {
-        try{
-            const doc = await model.findByIdAndUpdate(req.params.id)
-            res.status(201).json({
-                status:"success",
-                data: doc
-            })
-        }catch(error){
-            res.status(404).json({
-                status:'fail',
-                message: error
-            })
-        }
-    } 
-}
+export const createOne = (model:Model<any>): RequestHandler =>
+    catchAsync(async(req:Request, res:Response, next:NextFunction) => {
+        const doc = await model.create(req.body);
+        res.status(201).json({
+            status:"success",
+            data:doc
+        })
+    })
+     
 
-export const createOne = (model:Model<any>) => {
-    async (req:Request, res:Response, next:NextFunction) => {
-        try{
-            const doc = await model.create(req.body);
-            res.status(201).json({
-                status:"success",
-                data:doc
-            })
-        }catch(error){
-            res.status(404).json({
-                statsus:'fail',
-                message:error
-            })
-        }
-    }
-}
-
-export const deleteOne = (model:Model<any>) => {
-    async(req:Request, res:Response, next:NextFunction)=>{
-        try{
-            await model.findByIdAndDelete(req.params.id)
-            res.status(204).json({
-                status: 'success',
-            })
-        }catch(error){
-            res.status(404).json({
-                status:'fail',
-                message:error
-            })
-        }
-    }
-}
+export const deleteOne = (model:Model<any>): RequestHandler =>
+    catchAsync(async(req:Request, res:Response, next:NextFunction) => {
+        await model.findByIdAndDelete(req.params.id)
+        res.status(204).json({
+            status: 'success',
+        })
+    })

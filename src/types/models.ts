@@ -1,9 +1,10 @@
-import exp from "constants";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, PopulatedDoc } from "mongoose";
 
 export interface IGame extends Document{
+    _id: mongoose.Types.ObjectId,
     name: string,
     genre: mongoose.Types.ObjectId,
+    // genre: PopulatedDoc<IGenre>
     publisher: string,
     shortDescription: string,
     longDescription: string,
@@ -14,10 +15,12 @@ export interface IGame extends Document{
 }
 
 export interface IGenre extends Document {
+    _id: mongoose.Types.ObjectId,
     name: string
 }
 
 export interface IUser extends Document {
+    _id: mongoose.Types.ObjectId,
     name: string,
     email: string,
     image: string

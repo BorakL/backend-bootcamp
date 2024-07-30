@@ -23,11 +23,11 @@
 // })
 
 
-import express, { NextFunction, Request, Response, Express } from 'express'
-import mongoose, { mongo } from 'mongoose';
+import express, { NextFunction, Request, Response, Express, ErrorRequestHandler} from 'express' 
 import dotenv from 'dotenv'
 import gameRouter from './routes/gameRouter';
 import genreRouter from './routes/genreRouter';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -37,6 +37,13 @@ app.use(express.json())
 
 app.use("/api/v1/games",gameRouter)
 app.use("/api/v1/genres",genreRouter) 
+
+app.use((err:any, req:Request, res:Response, next:NextFunction)=>{
+    res.status(404).json({
+        status:'fail123',
+        message: err
+    })
+})
 
 const connectDB = async()=>{
     try{

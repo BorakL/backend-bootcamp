@@ -1,15 +1,15 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Query, Schema } from "mongoose";
 import { IGame } from "../types/models";
-import { timeStamp } from "console";
+import { Type } from "typescript";
  
-const gameSchema: Schema<IGame> = new mongoose.Schema({
+const gameSchema: Schema<IGame> = new mongoose.Schema<IGame>({
     name: {
         type: String,
         required: [true, 'Game name is required!']
     },
     genre: {
-        type: mongoose.Schema.ObjectId,
-        
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Genre'
     },
     publisher: {
         type: String,
@@ -39,6 +39,14 @@ const gameSchema: Schema<IGame> = new mongoose.Schema({
     toObject: {virtuals: true}
 }
 )
+
+gameSchema.pre<Query<IGame,IGame>>(/^find/,function(next){
+    this.populate({
+        path:"genre",
+        select: "name"
+    })
+    next()
+})
 
 gameSchema.virtual("onDiscount").get(function(){
     return this.discount > 0 
