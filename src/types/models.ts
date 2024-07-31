@@ -25,3 +25,11 @@ export interface IUser extends Document {
     email: string,
     image: string
 }
+
+export interface IOrder extends Document {
+    _id: mongoose.Types.ObjectId,
+    user: mongoose.Types.ObjectId,
+    game: mongoose.Types.ObjectId,
+    date: Date,
+    quantity: number
+}

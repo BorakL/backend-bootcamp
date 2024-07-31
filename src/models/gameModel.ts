@@ -8,7 +8,7 @@ const gameSchema: Schema<IGame> = new mongoose.Schema<IGame>({
         required: [true, 'Game name is required!']
     },
     genre: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.ObjectId,
         ref: 'Genre'
     },
     publisher: {
