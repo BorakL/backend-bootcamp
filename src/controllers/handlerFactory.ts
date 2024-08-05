@@ -1,15 +1,16 @@
 import { NextFunction, Request, RequestHandler, Response } from "express"; 
 import { Model } from "mongoose";
 import catchAsync from "../utilities/catchAsync";
+import APIFeatures from "../utilities/apiFeatures";
 
 export const getAll = (model:Model<any>): RequestHandler =>  
     catchAsync(async(req:Request, res:Response, next:NextFunction) => {
-        const data = await model.find();
-        throw new Error("greška")
-            res.status(200).json({
-                status: "success",
-                data
-            })
+        const features = new APIFeatures(model.find(), req.query).find().sort().limitFields().paginate();
+        const data = await features.queryResult;
+        res.status(200).json({
+            status:'success',
+            data
+        })
     })
 
 export const getOne = (model: Model<any>): RequestHandler => 

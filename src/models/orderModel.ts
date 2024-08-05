@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Query, Schema } from "mongoose";
 import { IOrder } from "../types/models";
 
 const orderSchema:Schema<IOrder> = new Schema({
@@ -19,6 +19,17 @@ const orderSchema:Schema<IOrder> = new Schema({
         required: [true, "Quantity of ordered items is required"],
         default: 1
     }
+})
+
+orderSchema.pre<Query<IOrder,IOrder>>(/^find/, function(next){
+    this.populate({
+        path:"user",
+        select:"name"
+    }).populate({
+        path:"game",
+        select:"name"
+    });
+    next();
 })
 
 const OrderModel = mongoose.model<IOrder>("Order", orderSchema)

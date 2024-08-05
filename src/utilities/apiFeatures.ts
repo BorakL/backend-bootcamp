@@ -1,8 +1,10 @@
-class APIFeatures {
-    queryResult:any;
-    queryString:any;
+import { Query } from "mongoose";
 
-    constructor(queryResult: any, queryString:any){
+class APIFeatures<T extends Document>{
+    queryResult: Query<T[],T>;
+    queryString: Record<string,any>;
+
+    constructor(queryResult: Query<T[],T>, queryString:Record<string,any>){
         this.queryResult = queryResult;
         this.queryString = queryString;
     }
@@ -13,7 +15,7 @@ class APIFeatures {
         excludedFields.forEach(e => delete queryObj[e]);
         let queryStr = JSON.stringify(queryObj);
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match=> `$${match}`);
-        this.queryResult = this.queryResult.find(JSON.parse(queryStr)) || [];
+        this.queryResult = this.queryResult.find(JSON.parse(queryStr))
         return this;
     }
 

@@ -1,6 +1,5 @@
 import mongoose, { Query, Schema } from "mongoose";
 import { IGame } from "../types/models";
-import { Type } from "typescript";
  
 const gameSchema: Schema<IGame> = new mongoose.Schema<IGame>({
     name: {
