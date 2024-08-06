@@ -4,21 +4,19 @@ import { IOrder } from "../types/models";
 const orderSchema:Schema<IOrder> = new Schema({
     user: {
         type: mongoose.Schema.ObjectId,
-        ref: "user"
+        ref: "User"
     },
     game: {
         type: mongoose.Schema.ObjectId,
-        ref:"game"
-    },
-    date: {
-        type: Date,
-        required: [true, "Date of order is required"]
+        ref:"Game"
     },
     quantity: {
         type: Number,
         required: [true, "Quantity of ordered items is required"],
         default: 1
     }
+},{
+    timestamps: true
 })
 
 orderSchema.pre<Query<IOrder,IOrder>>(/^find/, function(next){

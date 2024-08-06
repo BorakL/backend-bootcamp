@@ -28,6 +28,8 @@ import dotenv from 'dotenv'
 import gameRouter from './routes/gameRouter';
 import genreRouter from './routes/genreRouter';
 import mongoose from 'mongoose';
+import userRouter from './routes/userRouter';
+import orderRouter from './routes/orderRouter';
 
 dotenv.config();
 
@@ -35,8 +37,10 @@ const app:Express = express();
 
 app.use(express.json())
 
-app.use("/api/v1/games",gameRouter)
-app.use("/api/v1/genres",genreRouter) 
+app.use("/api/v1/games", gameRouter)
+app.use("/api/v1/genres", genreRouter) 
+app.use("/api/v1/users", userRouter)
+app.use("/api/v1/orders", orderRouter)
 
 app.use((err:any, req:Request, res:Response, next:NextFunction)=>{
     res.status(404).json({
