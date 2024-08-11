@@ -5,7 +5,8 @@ import APIFeatures from "../utilities/apiFeatures";
 
 export const getAll = (model:Model<any>): RequestHandler =>  
     catchAsync(async(req:Request, res:Response, next:NextFunction) => {
-        const features = new APIFeatures(model.find(), req.query).find().sort().limitFields().paginate();
+        console.log("llreq.body",req.body)
+        const features = new APIFeatures(model.find(req.body), req.query).filter().sort().limitFields().paginate();
         const data = await features.queryResult;
         res.status(200).json({
             status:'success',

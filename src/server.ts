@@ -5,6 +5,8 @@ import genreRouter from './routes/genreRouter';
 import mongoose from 'mongoose';
 import userRouter from './routes/userRouter';
 import orderRouter from './routes/orderRouter';
+import session from 'express-session';
+import reviewRouter from './routes/reviewRoutes';
 
 dotenv.config();
 
@@ -12,10 +14,50 @@ const app:Express = express();
 
 app.use(express.json())
 
+app.use(
+    session({
+        secret:"anson the dev",
+        saveUninitialized: false,
+        resave: false,
+        cookie: {
+            maxAge: 60000 * 60,
+        }
+    })
+)
+
 app.use("/api/v1/games", gameRouter)
 app.use("/api/v1/genres", genreRouter) 
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/orders", orderRouter)
+app.use("/api/v1/reviews", reviewRouter)
+
+// app.get("/", (req:Request, res:Response, next:NextFunction)=>{
+//     console.log(req.session);
+//     console.log(req.session.id);
+//     res.send("Hello")
+// })
+
+// app.get("/example", (req:Request, res:Response, next:NextFunction)=>{
+//     req.session.visited = true;
+//     console.log(req.session);
+//     console.log(req.session.id);
+//     res.send("Hell vcvo")
+// })
+
+// app.post("/api/cart", (req:Request, res:Response, next:NextFunction)=>{
+//     const {body: {item}} = req;
+//     if(req.session.cart){
+//        const {cart} = req.session
+//        cart.push(item)
+//     }else{
+//         req.session.cart = [item]
+//     }
+//     return res.status(201).send(item)
+// })
+
+// app.get("/api/cart", (req:Request, res:Response, next:NextFunction)=>{
+//     return res.send(req.session.cart ?? [])
+// })
 
 app.use((err:any, req:Request, res:Response, next:NextFunction)=>{
     res.status(404).json({

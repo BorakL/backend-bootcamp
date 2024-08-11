@@ -9,7 +9,7 @@ class APIFeatures<T extends Document>{
         this.queryString = queryString;
     }
 
-    find(){
+    filter(){
         const queryObj = {...this.queryString};
         const excludedFields = ['page','sort','limit','fields'];
         excludedFields.forEach(e => delete queryObj[e]);
