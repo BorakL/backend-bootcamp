@@ -38,17 +38,28 @@ const gameSchema: Schema<IGame> = new mongoose.Schema<IGame>({
     toObject: {virtuals: true}
 }
 )
+ 
+gameSchema.virtual("onDiscount").get(function(){
+    return this.discount > 0 
+})
+
+gameSchema.virtual('reviews',{
+    ref:"Review",
+    foreignField:"game",
+    localField:"_id"
+})
 
 gameSchema.pre<Query<IGame,IGame>>(/^find/,function(next){
     this.populate({
         path:"genre",
-        select: "name"
+        model:"Genre",
+        select: 'name'
+    }).populate({
+        path:"reviews",
+        model:"Review",
+        select:{'review':1}
     })
     next()
-})
-
-gameSchema.virtual("onDiscount").get(function(){
-    return this.discount > 0 
 })
 
 const Game = mongoose.model<IGame>('Game', gameSchema)
