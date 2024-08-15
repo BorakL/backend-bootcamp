@@ -31,5 +31,11 @@ app.listen(port, ()=>{
  
 
 const user1 = new User({firstName:'John', lastName:'Doe',email:'john.doe@example.com'})
-console.log("user1",user1)
-user1.save();
+// console.log("user1",user1)
+// user1.save();
+
+const addUser = async()=>{
+    await User.create({firstName: 'Julian', lastName:'Doe', email:'Julian@asdf.com'})
+}
+// addUser();
+ 

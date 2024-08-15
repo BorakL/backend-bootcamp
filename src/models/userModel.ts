@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { IUser } from "../types/userType";
+import { IUser } from "../types/userType"; 
 
-const userSchema = new mongoose.Schema<IUser>({
+export const userSchema = new mongoose.Schema<IUser>({
     firstName: {
         type: String,
         required: [true, "The first name is required field"]
@@ -20,10 +20,25 @@ const userSchema = new mongoose.Schema<IUser>({
             },
             message: props => `${props} is not valid email!`
         }
+    },
+    post: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User'
     }
 },{
     toJSON: {virtuals:true},
     toObject: {virtuals:true}
+})
+
+userSchema.post('save', function(doc,next){
+    console.log(`Welcome user ${doc.fullName}`)
+    next()
+}) 
+userSchema.pre('save', function(next){
+    if(this.email !== this.email.toLocaleLowerCase()){
+        this.email = this.email.toLocaleLowerCase()
+    }
+    next()
 })
 
 userSchema.virtual("fullName").get(function(){
