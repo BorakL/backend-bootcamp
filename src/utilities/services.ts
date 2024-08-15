@@ -1,36 +1,30 @@
-import { UserType, UserTypeUpdate } from "../types/userType";
+import { IUser } from "../types/userType";
 import { uniq } from "./uniqueId"; 
 import fs from 'fs/promises';
 
-interface NewUserType{
-    name: string;
-    language: string;
-    bio: string;
-    version: number
-}
 
 const path = `${process.cwd()}/data/users.json`;
 
-const writeData = async (data:UserType[])=>{
+const writeData = async (data:IUser[])=>{
     return await fs.writeFile(path, JSON.stringify(data))
 }
 
-const getItem = (data:UserType[], id:string)=>{ 
+const getItem = (data:IUser[], id:string)=>{ 
     return data.find(item => item.id===id)
 }
 
-const addItem = async (data:UserType[], newItem: NewUserType) => {
+const addItem = async (data:IUser[], newItem: IUser) => {
     console.log("new ITem", newItem)
     data.push({...newItem, id:uniq}); 
     return await writeData(data)
 }
 
-const removeItem = async(id:string, data:UserType[]) => {
+const removeItem = async(id:string, data:IUser[]) => {
     const filteredData = data.filter(user => user.id!==id)
     return await writeData(filteredData)
 }
 
-const updateItem = async (id:string, data:UserType[], newItem:UserTypeUpdate) => {
+const updateItem = async (id:string, data:IUser[], newItem:IUser) => {
     const updatedData = data.map(item => {
         if(item.id===id){
             return {...item, ...newItem}
