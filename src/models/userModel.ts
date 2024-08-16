@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 import { IUser } from "../types/userType"; 
+import IPost from "../types/postType";
 
 export const userSchema = new mongoose.Schema<IUser>({
     firstName: {
@@ -13,18 +14,31 @@ export const userSchema = new mongoose.Schema<IUser>({
     email: {
         type: String,
         required: [true, "The email is required field"],
-        validate: {
-            validator: function(v){
-                const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                return v.match(emailReg)
-            },
-            message: props => `${props} is not valid email!`
-        }
+        validate: 
+            [
+                {
+                    validator: function(v){
+                        const emailReg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                        return v.match(emailReg)
+                    },
+                    message: props => `${props} is not valid email!`
+                },
+                {
+                    validator: function(){
+                        const domain = this.email.match(/(?<=\@).*$/);
+                        if(domain!==null){
+                            return ["gmail.com","example.com"].some(d => d===domain[0])
+                        }
+                        return false
+                    },
+                    message: props => `${props} is not valid email! The domain is not allowed.`
+                }
+            ]
     },
-    post: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'User'
-    }
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }]
 },{
     toJSON: {virtuals:true},
     toObject: {virtuals:true}
@@ -41,10 +55,25 @@ userSchema.pre('save', function(next){
     next()
 })
 
+userSchema.pre("findOne", function(next){
+    this.populate("posts");
+    next();
+});
+
+userSchema.methods.getInitials = function(){
+    return `${this.firstName[0]} ${this.lastName[0]}`
+}
+
 userSchema.virtual("fullName").get(function(){
     return `${this.firstName} ${this.lastName}`
 })
 
+userSchema.virtual("emailDomain").get(function(){
+    const domain = this.email.match(/(?<=\@).*$/);
+    return  domain ? domain : "unknown"
+})
+
+ 
 const User = mongoose.model<IUser>("User",userSchema);
 
 export default User;

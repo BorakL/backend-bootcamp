@@ -5,6 +5,7 @@ import userRouter from './routes/userRouter';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose'; 
 import User from './models/userModel';
+import Post from './models/postModel';
 dotenv.config();
 
 const app:Express = express();
@@ -35,7 +36,21 @@ const user1 = new User({firstName:'John', lastName:'Doe',email:'john.doe@example
 // user1.save();
 
 const addUser = async()=>{
-    await User.create({firstName: 'Julian', lastName:'Doe', email:'Julian@asdf.com'})
+    await User.create({firstName: 'Marko', lastName:'Petrovic', email:'mare@gmail.com'})
 }
 // addUser();
+ 
+
+const addPost = async()=>{
+    await Post.create({title:"Naslov", text:"tralalaa"})
+}
+// addPost();
+
+const updateUser = async()=>{
+    await User.findByIdAndUpdate("66bcbc6cb1de0aca15064940",{posts:["66bf5076a5f3b8ac2ebed7b4"]})
+}
+// updateUser();
+
+// const user = User.findById("66bcbc6cb1de0aca15064940").populate("posts").then(user=>console.log("user",user))
+// User.findOne({_id:"66bcbc6cb1de0aca15064940"}).then(user => console.log("usersssss",user))
  
