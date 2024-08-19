@@ -9,4 +9,5 @@ export interface IUser extends Document {
     posts?: [PopulatedDoc<IPost>];
     getInitials: ()=>string;
     emailDomain: string;
+    isDeleted: boolean;
 }

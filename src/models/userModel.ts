@@ -38,7 +38,11 @@ export const userSchema = new mongoose.Schema<IUser>({
     posts: [{
         type: Schema.Types.ObjectId,
         ref: 'Post'
-    }]
+    }],
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
 },{
     toJSON: {virtuals:true},
     toObject: {virtuals:true}
@@ -57,11 +61,26 @@ userSchema.pre('save', function(next){
 
 userSchema.pre("findOne", function(next){
     this.populate("posts");
+    const formatName = (name:string)=>{
+        return name.charAt(0).toUpperCase() + name.substring(1).toLowerCase()
+    }
+    if (this.getQuery().lastName) {
+        this.setQuery({ lastName: formatName(this.getQuery().lastName) });
+    }
     next();
 });
 
+userSchema.pre(/^find/,function(this: mongoose.Query<IUser[], IUser>, next){
+    this.where({isDeleted: {$ne:true}})
+    next();
+})
+
 userSchema.methods.getInitials = function(){
     return `${this.firstName[0]} ${this.lastName[0]}`
+}
+userSchema.methods.softDelete = function(){ 
+    this.isDeleted = true;
+    return this.save()
 }
 
 userSchema.virtual("fullName").get(function(){

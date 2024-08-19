@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import IPost from "../types/postType";
 
 export const postSchema = new mongoose.Schema<IPost>({
@@ -9,6 +9,10 @@ export const postSchema = new mongoose.Schema<IPost>({
     text: {
         type: String,
         required: [true, "The text is required field"]
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
     }
 },{
     timestamps: true
