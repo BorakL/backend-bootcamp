@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon dist/index.js",
     "dev": "ts-node-dev src/index.ts",
+    "importData": "ts-node-dev data/data.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

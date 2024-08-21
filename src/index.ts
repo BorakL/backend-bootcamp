@@ -143,4 +143,6 @@ const findUsers2 = async()=>{
 }
 // findUsers2();
 
-User.find({firstName:"Charlie"}).then(res=>console.log("resssssss",res))
+// User.find({firstName:"Charlie"}).then(res=>console.log("resssssss",res))
+
+//
